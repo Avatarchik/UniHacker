@@ -1,10 +1,12 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
+using MessageBoxAvalonia = MessageBox.Avalonia;
 
 namespace UniHacker
 {
     internal class UnityHubV3
     {
-        const string init = @"init() {
+        const string init = @"
         return __awaiter(this, void 0, void 0, function* () {
             this.authLogger.info('Initializing the auth service');
             this.initNetworkInterceptors();
@@ -16,11 +18,11 @@ namespace UniHacker
             this.logInWithAccessToken();
             return this.userInfo;
         });
-    }";
-        const string openSignIn = @"openSignIn() {
+";
+        const string openSignIn = @"
         this.logInWithAccessToken();
-    }";
-        const string logInWithAccessToken = @"logInWithAccessToken(accessToken) {
+";
+        const string logInWithAccessToken = @"
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 this.authLogger.info('Fetching user info from the identity provider using access token');
@@ -38,12 +40,12 @@ namespace UniHacker
                 throw error;
             }
         });
-    }";
-        const string isTokenValid = @"static isTokenValid(token) {
+";
+        const string isTokenValid = @"
         return true;
-    }";
+";
 
-        const string getValidEntitlementGroups = @"getValidEntitlementGroups() {
+        const string getValidEntitlementGroups = @"
         return __awaiter(this, void 0, void 0, function* () {
             return [{
                 startDate: new Date('1993-01-01T08:00:00.000Z'),
@@ -52,29 +54,77 @@ namespace UniHacker
                 licenseType: 'PRO',
             }];
         });
-    }";
+";
 
-        const string isLicenseValid = @"isLicenseValid() {
+        const string isLicenseValid = @"
         return __awaiter(this, void 0, void 0, function* () {
             return true;
         });
-    }";
+";
 
-        public static bool Patch(string exportFolder)
+        const string fetchUserInfo = @"
+		return {
+			foreign_key: 'anonymous',
+			name: 'anonymous',
+			email: 'anonymous@gmail.com',
+			primary_org: 'anonymous',
+			identifier: 'anonymous',
+			created_at: 0,
+		}
+";
+        const string licensingSdk_init = @"
+        return __awaiter(this, void 0, void 0, function* () {
+            return true;
+        });
+";
+        const string licensingSdk_getInstance = @"
+		return null;
+ ";
+
+        public static async Task<bool> Patch(string exportFolder)
         {
-            var authServicePath = Path.Combine(exportFolder, "build/main/services/authService/AuthService.js");
-            var authServiceContent = File.ReadAllText(authServicePath);
-            UnityHubPatcher.ReplaceMethod(ref authServiceContent, @"init\(\)\s*", init);
-            UnityHubPatcher.ReplaceMethod(ref authServiceContent, @"openSignIn\(\)\s*", openSignIn);
-            UnityHubPatcher.ReplaceMethod(ref authServiceContent, @"logInWithAccessToken\(accessToken\)\s*", logInWithAccessToken);
-            UnityHubPatcher.ReplaceMethod(ref authServiceContent, @"static\sisTokenValid\(token\)\s*", isTokenValid);
-            File.WriteAllText(authServicePath, authServiceContent);
+            var result = await MessageBox.Show(Language.GetString("Hub_Patch_Option_Login"), MessageBoxAvalonia.Enums.ButtonEnum.YesNo);
+            if (result == MessageBoxAvalonia.Enums.ButtonResult.No)
+            {
+                var authServicePath = Path.Combine(exportFolder, "build/main/services/authService/AuthService.js");
+                var authServiceContent = File.ReadAllText(authServicePath);
+                UnityHubPatcher.ReplaceMethodBody(ref authServiceContent, @"init", init);
+                UnityHubPatcher.ReplaceMethodBody(ref authServiceContent, @"openSignIn", openSignIn);
+                UnityHubPatcher.ReplaceMethodBody(ref authServiceContent, @"logInWithAccessToken", logInWithAccessToken);
+                UnityHubPatcher.ReplaceMethodBody(ref authServiceContent, @"static\sisTokenValid", isTokenValid);
+                File.WriteAllText(authServicePath, authServiceContent);
+
+                var cloudCorePath = Path.Combine(exportFolder, "build/main/services/cloudCore/cloudCore.js");
+                var cloudCoreContent = File.ReadAllText(cloudCorePath);
+                UnityHubPatcher.ReplaceMethodBody(ref cloudCoreContent, @"fetchUserInfo", fetchUserInfo);
+                File.WriteAllText(cloudCorePath, cloudCoreContent);
+            }
+
+            result = await MessageBox.Show(Language.GetString("Hub_Patch_Option_DisableUpdate"), MessageBoxAvalonia.Enums.ButtonEnum.YesNo);
+            if (result == MessageBoxAvalonia.Enums.ButtonResult.Yes)
+            {
+                var defaultLocalConfigPath = Path.Combine(exportFolder, "build/common/DefaultLocalConfig.js");
+                var defaultLocalConfigContent = File.ReadAllText(defaultLocalConfigPath);
+                defaultLocalConfigContent = defaultLocalConfigContent.Replace("DisableAutoUpdate]: false,", "DisableAutoUpdate]: true,");
+                File.WriteAllText(defaultLocalConfigPath, defaultLocalConfigContent);
+            }
 
             var licenseServicePath = Path.Combine(exportFolder, "build/main/services/licenseService/licenseService.js");
             var licenseServiceContent = File.ReadAllText(licenseServicePath);
-            UnityHubPatcher.ReplaceMethod(ref licenseServiceContent, @"getValidEntitlementGroups\(\)\s*", getValidEntitlementGroups);
-            UnityHubPatcher.ReplaceMethod(ref licenseServiceContent, @"isLicenseValid\(\)\s*", isLicenseValid);
+            UnityHubPatcher.ReplaceMethodBody(ref licenseServiceContent, @"getValidEntitlementGroups", getValidEntitlementGroups);
+            UnityHubPatcher.ReplaceMethodBody(ref licenseServiceContent, @"isLicenseValid", isLicenseValid);
             File.WriteAllText(licenseServicePath, licenseServiceContent);
+
+            var licensingSdkPath = Path.Combine(exportFolder, "build/main/services/licenseService/licensingSdk.js");
+            var licensingSdkContent = File.ReadAllText(licensingSdkPath);
+            UnityHubPatcher.ReplaceMethodBody(ref licensingSdkContent, @"init", licensingSdk_init);
+            UnityHubPatcher.ReplaceMethodBody(ref licensingSdkContent, @"getInstance", licensingSdk_getInstance);
+            File.WriteAllText(licensingSdkPath, licensingSdkContent);
+
+            var editorappPath = Path.Combine(exportFolder, "build/main/services/editorApp/editorapp.js");
+            var editorappContent = File.ReadAllText(editorappPath);
+            editorappContent = editorappContent.Replace("licensingSdk.getInstance().", "licensingSdk.getInstance()?.");
+            File.WriteAllText(editorappPath, editorappContent);
 
             return true;
         }

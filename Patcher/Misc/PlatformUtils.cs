@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Platform;
 
@@ -38,12 +41,17 @@ namespace UniHacker
         public static string GetExtension(bool dot = true)
         {
             var extension = string.Empty;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                extension = "exe";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                extension = "app";
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                extension = "";
+            switch (GetPlatformType())
+            {
+                case PlatformType.Windows:
+                    extension = "exe";
+                    break;
+                case PlatformType.MacOS:
+                    extension = "app";
+                    break;
+                case PlatformType.Linux:
+                    return string.Empty;
+            }
 
             return (dot ? "." : "") + extension;
         }
@@ -87,8 +95,30 @@ namespace UniHacker
             return RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
         }
 
+        public static (string rootPath, string filePath) GetRealFilePath(string filePath)
+        {
+            var realFilePath = filePath;
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
+            var rootPath = Path.GetDirectoryName(filePath) ?? string.Empty;
+
+            switch (GetPlatformType())
+            {
+                case PlatformType.MacOS:
+                    rootPath = Path.Combine(filePath, "Contents");
+                    realFilePath = Path.Combine(rootPath, $"MacOS/{fileName}");
+                    break;
+                case PlatformType.Linux:
+                    if (fileName.Contains("unityhub"))
+                        realFilePath = Path.Combine(rootPath, "unityhub-bin");
+                    break;
+            }
+
+            return (rootPath, realFilePath);
+        }
+
         public static (string fileVersion, int majorVersion, int minorVersion) GetFileVersionInfo(string filePath, ArchitectureType architectureType)
         {
+            var fileName = Path.GetFileNameWithoutExtension(filePath);
             var rootPath = Path.GetDirectoryName(filePath);
             var fileVersion = string.Empty;
             var majorVersion = 0;
@@ -117,34 +147,113 @@ namespace UniHacker
                     }
                     break;
                 case PlatformType.Linux:
-#pragma warning disable CS8604
-                    var cacheFolder = new DirectoryInfo(Path.Combine(rootPath, "Data/Resources/PackageManager/ProjectTemplates/libcache"));
-#pragma warning restore CS8604
-                    if (cacheFolder.Exists)
+                    if (fileName.Contains("unityhub", StringComparison.OrdinalIgnoreCase))
                     {
-                        var childFolders = cacheFolder.GetDirectories();
-                        foreach (var child in childFolders)
+                        var asarPath = Path.Combine(rootPath!, "resources/app.asar");
+                        var asarBakPath = Path.Combine(rootPath!, "resources/app.asar.bak");
+                        if (File.Exists(asarPath) || File.Exists(asarBakPath))
                         {
-                            var infoPath = Path.Combine(child.FullName, "Bee/bee_backend.info");
-                            if (File.Exists(infoPath))
+                            var asarContent = string.Empty;
+
+                            if (File.Exists(asarPath))
+                                asarContent = File.ReadAllText(asarPath);
+                            else
+                                asarContent = File.ReadAllText(asarBakPath);
+
+                            var infoMatch = Regex.Match(asarContent, @"""name"":\s""unityhub"",.*?""version"":\s""(?<version>.*?)"",", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                            if (infoMatch.Success)
                             {
-                                var infoContent = File.ReadAllText(infoPath);
-                                var infoMatch = Regex.Match(infoContent, @"UnityVersion\"":\s*\""(?<version>.*?)\""", RegexOptions.Singleline);
-                                if (infoMatch.Success)
-                                {
-                                    fileVersion = infoMatch.Groups["version"].Value;
-                                    var versions = fileVersion.Split('.');
-                                    _ = int.TryParse(versions[0], out majorVersion);
-                                    _ = int.TryParse(versions[1], out minorVersion);
-                                    return (fileVersion, majorVersion, minorVersion);
-                                }
+                                fileVersion = infoMatch.Groups["version"].Value;
+                                var versions = fileVersion.Split('.');
+                                _ = int.TryParse(versions[0], out majorVersion);
+                                _ = int.TryParse(versions[1], out minorVersion);
+                                return (fileVersion, majorVersion, minorVersion);
                             }
+                            else
+                            {
+                                MessageBox.Show(Language.GetString("Hub_patch_error2"));
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(Language.GetString("Hub_patch_error1"));
+                        }
+                    }
+                    else
+                    {
+                        fileVersion = TryGetVersionOfUnity(filePath);
+                        if (!string.IsNullOrEmpty(fileVersion))
+                        {
+                            var versions = fileVersion.Split('.');
+                            _ = int.TryParse(versions[0], out majorVersion);
+                            _ = int.TryParse(versions[1], out minorVersion);
+                            return (fileVersion, majorVersion, minorVersion);
+                        }
+                        else
+                        {
+                            MessageBox.Show(Language.GetString("Unity_patch_error1"));
                         }
                     }
                     break;
             }
 
             return (fileVersion, majorVersion, minorVersion);
+        }
+
+        public static async Task<bool> MacOSRemoveQuarantine(string appPath)
+        {
+            try
+            {
+                var attrStartInfo = new ProcessStartInfo("xattr", $"-rds com.apple.quarantine \"{appPath}\"");
+                var attrProcess = Process.Start(attrStartInfo);
+                await attrProcess!.WaitForExitAsync();
+                return attrProcess.ExitCode == 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static string TryGetVersionOfUnity(string filePath)
+        {
+            var maxLength = 40;
+            var fileBytes = File.ReadAllBytes(filePath);
+
+            var regex1 = new Regex(@"\d+\.\d\.\d+[fb]\d_\w+", RegexOptions.Compiled | RegexOptions.Singleline);
+            var regex2 = new Regex(@"\d+\.\d\.\d+[fb]\d\.git\.\w+", RegexOptions.Compiled | RegexOptions.Singleline);
+
+            var counter = 0;
+            var stringBytes = new List<byte>(maxLength);
+
+            void Clear()
+            {
+                counter = 0;
+                stringBytes.Clear();
+            }
+
+            for (int i = 0; i < fileBytes.Length; i++)
+            {
+                if (++counter >= maxLength)
+                {
+                    Clear();
+                    continue;
+                }
+
+                stringBytes.Add(fileBytes[i]);
+                if (fileBytes[i] == 0 && stringBytes.Count > 1)
+                {
+                    stringBytes.RemoveAt(stringBytes.Count - 1);
+                    var versionName = Encoding.UTF8.GetString(stringBytes.ToArray());
+
+                    if (regex1.IsMatch(versionName) || regex2.IsMatch(versionName))
+                        return versionName;
+
+                    Clear();
+                }
+            }
+
+            return string.Empty;
         }
     }
 

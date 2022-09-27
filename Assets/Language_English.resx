@@ -124,6 +124,21 @@ If patch fails, please submit Unity binary file or Unity Hub version number on G
 
 https://www.github.com/tylearymf/UniHacker</value>
   </data>
+  <data name="Hub_copy_error1" xml:space="preserve">
+    <value>Failed to copy files. Please manually copy files! '{0}' -&gt; '{1}'</value>
+  </data>
+  <data name="Hub_patch_error1" xml:space="preserve">
+    <value>The 'app.asar' file could not be found!</value>
+  </data>
+  <data name="Hub_patch_error2" xml:space="preserve">
+    <value>Unable to detect the version number of the Unity Hub!</value>
+  </data>
+  <data name="Hub_Patch_Option_DisableUpdate" xml:space="preserve">
+    <value>Do you need to turn off automatic update?</value>
+  </data>
+  <data name="Hub_Patch_Option_Login" xml:space="preserve">
+    <value>Do you need to log in to your own account?</value>
+  </data>
   <data name="Non_Administrator" xml:space="preserve">
     <value>Please run this program as an administrator.</value>
   </data>
@@ -134,7 +149,7 @@ https://www.github.com/tylearymf/UniHacker</value>
     <value>File doest not exist:{0}</value>
   </data>
   <data name="NotSupport" xml:space="preserve">
-    <value>NotSupport Patch</value>
+    <value>Not Support Patch</value>
   </data>
   <data name="Patched" xml:space="preserve">
     <value>Has been patched</value>
@@ -151,6 +166,18 @@ https://www.github.com/tylearymf/UniHacker</value>
   <data name="Process_occupy" xml:space="preserve">
     <value>{0} is running and the patch may fail!</value>
   </data>
+  <data name="Revert_btn" xml:space="preserve">
+    <value>Revert</value>
+  </data>
+  <data name="Revert_Desc" xml:space="preserve">
+    <value>Do you need to remove the crack patch?</value>
+  </data>
+  <data name="Revert_fail" xml:space="preserve">
+    <value>Remove failed!</value>
+  </data>
+  <data name="Revert_success" xml:space="preserve">
+    <value>Successfully removed!</value>
+  </data>
   <data name="Select" xml:space="preserve">
     <value>Select</value>
   </data>
@@ -158,13 +185,16 @@ https://www.github.com/tylearymf/UniHacker</value>
     <value>Please select Unity or Unity Hub.</value>
   </data>
   <data name="Special" xml:space="preserve">
-    <value>NotSupport Patch</value>
+    <value>Special Edition</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Status:</value>
   </data>
   <data name="Support" xml:space="preserve">
     <value>Support Patch</value>
+  </data>
+  <data name="Unity_patch_error1" xml:space="preserve">
+    <value>Unable to detect the version number of the Unity!</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unknown</value>

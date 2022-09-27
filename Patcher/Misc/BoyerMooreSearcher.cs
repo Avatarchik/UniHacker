@@ -43,15 +43,30 @@ namespace UniHacker
             }
         }
 
-        public static List<int> FindPattern(List<byte[]> needles, byte[] haystack)
+        public static List<int> FindPattern(List<byte?[]> needles, byte[] haystack)
         {
             var indexes = new List<int>(needles.Count);
-            foreach (var needle in needles)
-            {
-                var array = FindPattern(needle, haystack).ToArray();
-                if (array.Length != 1)
-                    break;
 
+            var hasNulls = new bool[needles.Count];
+            for (int i = 0; i < needles.Count; i++)
+            {
+                var needleArray = needles[i];
+                hasNulls[i] |= needleArray.Contains(null);
+            }
+
+            for (int i = 0; i < needles.Count; i++)
+            {
+                var needleArray = needles[i];
+                var hasNull = hasNulls[i];
+                int[]? array = default;
+
+                if (hasNull)
+                    array = FindPatternWithNull(needleArray, haystack).ToArray();
+                else
+                    array = FindPattern(needleArray.ToList().ConvertAll(x => x.Value).ToArray(), haystack).ToArray();
+
+                if (array?.Length != 1)
+                    break;
                 indexes.Add(array[0]);
             }
 
@@ -61,6 +76,34 @@ namespace UniHacker
         public static IEnumerable<int> FindPattern(byte[] needle, byte[] haystack)
         {
             return new BoyerMooreSearcher(needle).Search(haystack).ToArray();
+        }
+
+        public static IEnumerable<int> FindPatternWithNull(byte?[] needle, byte[] haystack)
+        {
+            for (int i = 0; i < haystack.Length; i++)
+            {
+                var isMatch = true;
+                for (int k = 0; k < needle.Length; k++)
+                {
+                    if (needle[k] == null)
+                        continue;
+
+                    if (i + k >= haystack.Length)
+                    {
+                        isMatch = false;
+                        break;
+                    }
+
+                    if (haystack[i + k] != needle[k])
+                    {
+                        isMatch = false;
+                        break;
+                    }
+                }
+
+                if (isMatch)
+                    yield return i;
+            }
         }
 
         static int[] makeByteTable(byte[] needle)
