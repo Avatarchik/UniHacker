@@ -7,8 +7,10 @@ using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+#if !DOCKER_ENV
 using Avalonia;
 using Avalonia.Platform;
+#endif
 
 namespace UniHacker
 {
@@ -16,6 +18,7 @@ namespace UniHacker
     {
         public const string FontFamily = "Microsoft YaHei,Simsun,苹方-简,宋体-简";
 
+#if !DOCKER_ENV
         static Stream? s_IconStream;
         public static Stream IconStream
         {
@@ -32,6 +35,7 @@ namespace UniHacker
                 return s_IconStream;
             }
         }
+#endif
 
         public static bool IsAdministrator =>
             RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
@@ -251,6 +255,51 @@ namespace UniHacker
 
                     Clear();
                 }
+            }
+
+            return string.Empty;
+        }
+
+        public static async Task<string> GetLinuxUserName()
+        {
+            try
+            {
+                var startInfo = new ProcessStartInfo("/bin/bash", "-c \"getent passwd | grep \"/home\" | grep -v \"nologin\"\"")
+                {
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                };
+                var process = Process.Start(startInfo);
+                await process!.WaitForExitAsync();
+                if (process.ExitCode != 0)
+                {
+                    throw new Exception($"error get linux user name. errorCode:{process.ExitCode}. errorMsg:{process.StandardError.ReadToEnd()}");
+                }
+                else
+                {
+                    var output = await process.StandardOutput.ReadToEndAsync();
+                    var names = output.Split(':');
+                    var userName = names[0];
+
+                    startInfo = new ProcessStartInfo("/bin/bash", $"-c id \"{userName}\"")
+                    {
+                        RedirectStandardError = true
+                    };
+                    process = Process.Start(startInfo);
+                    await process!.WaitForExitAsync();
+                    if (process.ExitCode != 0)
+                    {
+                        throw new Exception($"error linux user name. errorCode:{process.ExitCode}. errorMsg:{process.StandardError.ReadToEnd()}");
+                    }
+                    else
+                    {
+                        return userName;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await MessageBox.Show(ex.ToString());
             }
 
             return string.Empty;

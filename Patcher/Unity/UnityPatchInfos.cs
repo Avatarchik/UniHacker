@@ -74,13 +74,14 @@ namespace UniHacker
             },
             new()
             {
+                // 2017.2.0 2017.2.1 2017.2.2
                 Version = "2017.2",
                 LightPattern = ToBytes(0x88, 0x91, 0xD9, 0x03, 0x00, 0x00, 0xC3, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0x48, 0x89, 0x5C, 0x24, 0x10),
                 DarkPattern = ToBytes(0x88, 0x91, 0xD9, 0x03, 0x00, 0x00, 0xC3, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xB0, 0x01, 0xC3, 0x90, 0x90),
             },
             new()
             {
-                Version = "2017.3",
+                Version = "2017.2.3 ; 2017.2.4 ; 2017.2.5 ; 2017.3",
                 LightPattern = ToBytes(0x88, 0x91, 0x01, 0x04, 0x00, 0x00, 0xC3, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0x48, 0x89, 0x5C, 0x24, 0x10),
                 DarkPattern = ToBytes(0x88, 0x91, 0x01, 0x04, 0x00, 0x00, 0xC3, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xB0, 0x01, 0xC3, 0x90, 0x90),
             },
@@ -196,9 +197,16 @@ namespace UniHacker
             new()
             {
                 // 2021.3.5、2021.3.6
-                Version = "2021.3",
+                Version = "2021.3.5 ; 2021.3.6",
                 LightPattern = ToBytes(ToArray("0F 84 9C 00 00 00 C7 44 24 20 24"), ToArray("75 14 B8 02 00 00 00 E9 66")),
                 DarkPattern = ToBytes(ToArray("E9 9D 00 00 00 00 C7 44 24 20 24"), ToArray("74 14 B8 02 00 00 00 E9 66")),
+            },
+            new()
+            {
+                // 2021.3.19
+                Version = "2021.3",
+                LightPattern = ToBytes(ToArray("0F 84 A4 00 00 00 C7 44 24 20 25"), ToArray("75 14 B8 02 00 00 00 E9 66")),
+                DarkPattern = ToBytes(ToArray("0F 85 A4 00 00 00 C7 44 24 20 25"), ToArray("74 14 B8 02 00 00 00 E9 66")),
             },
             new()
             {
@@ -248,9 +256,30 @@ namespace UniHacker
             new()
             {
                 // 2019.3.15
-                Version = "2019",
+                Version = "2019.3",
                 LightPattern = ToBytes(ToArray("? FF 80 B8 69 4C 00 00 00 74 5D"), ToArray("BB 02 00 00 00 45 84 E4 0F 84 3E 02")),
                 DarkPattern = ToBytes(ToArray("? FF 80 B8 69 4C 00 00 00 EB 5D"), ToArray("BB 02 00 00 00 45 84 E4 0F 85 3E 02")),
+            },
+            new()
+            {
+                // 2019.3.4
+                Version = "2019.3.4",
+                LightPattern = ToBytes(ToArray("02 73 FF 80 B8 69 4C 00 00 00 74 5D"), ToArray("FE BB 02 00 00 00 45 84 E4 0F 84 3E 02")),
+                DarkPattern = ToBytes(ToArray("02 73 FF 80 B8 69 4C 00 00 00 EB 5D"), ToArray("FE BB 02 00 00 00 45 84 E4 0F 85 3E 02")),
+            },
+            new()
+            {
+                // 2019.4.9
+                Version = "2019.4.9",
+                LightPattern = ToBytes(ToArray("05 6F FF 80 B8 69 4C 00 00 00 74 5D"), ToArray("FE BB 02 00 00 00 45 84 E4 0F 84 3E 02")),
+                DarkPattern = ToBytes(ToArray("05 6F FF 80 B8 69 4C 00 00 00 EB 5D"), ToArray("FE BB 02 00 00 00 45 84 E4 0F 85 3E 02")),
+            },
+            new()
+            {
+                // 2019.4.10
+                Version = "2019.4.10",
+                LightPattern = ToBytes(ToArray("C3 6E FF 80 B8 69 4C 00 00 00 74 5D"), ToArray("FE BB 02 00 00 00 45 84 E4 0F 84 3E 02")),
+                DarkPattern = ToBytes(ToArray("C3 6E FF 80 B8 69 4C 00 00 00 EB 5D"), ToArray("FE BB 02 00 00 00 45 84 E4 0F 85 3E 02")),
             },
             new()
             {
@@ -261,17 +290,17 @@ namespace UniHacker
             },
             new()
             {
-                // 2019.4.39、2019.4.38、2019.4.37
-                Version = "2019.4.3",
+                // 2019.4.40、2019.4.39、2019.4.38、2019.4.37
+                Version = "2019.4.40 ; 2019.4.39 ; 2019.4.38 ; 2019.4.37",
                 LightPattern = ToBytes(ToArray("72 FF 80 B8 69 4C 00 00 00 74 5D"), ToArray("BB 02 00 00 00 45 84 FF 0F 84 2E")),
                 DarkPattern = ToBytes(ToArray("72 FF 80 B8 69 4C 00 00 00 EB 5D"), ToArray("BB 02 00 00 00 45 84 FF 0F 85 2E")),
             },
             new()
             {
-                // 2019.4.40
-                Version = "2019.4.4",
-                LightPattern = ToBytes(ToArray("72 FF 80 B8 69 4C 00 00 00 74 5D"), ToArray("BB 02 00 00 00 45 84 FF 0F 84 2E")),
-                DarkPattern = ToBytes(ToArray("72 FF 80 B8 69 4C 00 00 00 EB 5D"), ToArray("BB 02 00 00 00 45 84 FF 0F 85 2E")),
+                // 2019
+                Version = "2019",
+                LightPattern = ToBytes(ToArray("? FF 80 B8 69 4C 00 00 00 74 5D"), ToArray("FD BB 02 00 00 00 45 84 ? 0F 84 ? 02")),
+                DarkPattern = ToBytes(ToArray("? FF 80 B8 69 4C 00 00 00 EB 5D"), ToArray("FD BB 02 00 00 00 45 84 ? 0F 85 ? 02")),
             },
             new()
             {
@@ -279,6 +308,13 @@ namespace UniHacker
                 Version = "2020",
                 LightPattern = ToBytes(ToArray("FF 80 B8 91 58 00 00 00 74 5D 48 8D 35"), ToArray("00 41 BF 02 00 00 00 84 C0 0F 84")),
                 DarkPattern = ToBytes(ToArray("FF 80 B8 91 58 00 00 00 EB 5D 48 8D 35"), ToArray("00 41 BF 02 00 00 00 84 C0 0F 85")),
+            },
+            new()
+            {
+                // 2021.1.7
+                Version = "2021.1",
+                LightPattern = ToBytes(ToArray("44 8A B0 A1 64 00 00 45 84 F6 74 66"), ToArray("00 41 BF 02 00 00 00 84 C0 0F 84 7F")),
+                DarkPattern = ToBytes(ToArray("44 8A B0 A1 64 00 00 45 84 F6 EB 66"), ToArray("00 41 BF 02 00 00 00 84 C0 0F 85 7F")),
             },
             new()
             {
@@ -290,13 +326,20 @@ namespace UniHacker
             new()
             {
                 //2021.3.6
-                Version = "2021.3",
+                Version = "2021.3.6",
                 LightPattern = ToBytes(ToArray("B0 A1 64 00 00 45 84 F6 74 66 48 8D 35"), ToArray("00 41 BF 02 00 00 00 84 C0 0F 84 3E")),
                 DarkPattern = ToBytes(ToArray("B0 A1 64 00 00 45 84 F6 EB 66 48 8D 35"), ToArray("00 41 BF 02 00 00 00 84 C0 0F 85 3E")),
             },
             new()
             {
-                // 2022.1.2
+                //2021.3.19
+                Version = "2021.3",
+                LightPattern = ToBytes(ToArray("8A B0 A1 64 00 00 45 84 F6 0F 84 A6"), ToArray("2A 00 00 41 BF 02 00 00 00 84 C0 0F 84")),
+                DarkPattern = ToBytes(ToArray("8A B0 A1 64 00 00 45 84 F6 E9 A7 00"), ToArray("2A 00 00 41 BF 02 00 00 00 84 C0 0F 85")),
+            },
+            new()
+            {
+                // 2022.1.2、2022.1.18
                 Version = "2022",
                 LightPattern = ToBytes(ToArray("8A B0 A1 64 00 00 45 84 F6 0F 84 A6"), ToArray("2A 00 00 41 BF 02 00 00 00 84 C0 0F 84")),
                 DarkPattern = ToBytes(ToArray("8A B0 A1 64 00 00 45 84 F6 E9 A7 00"), ToArray("2A 00 00 41 BF 02 00 00 00 84 C0 0F 85")),
@@ -362,18 +405,58 @@ namespace UniHacker
             new()
             {
                 // 2021.3.8(m1)
-                Version = "2021.3",
+                Version = "2021.3.8",
                 Architecture = ArchitectureType.MacOS_ARM64,
                 LightPattern = ToBytes(ToArray("F4 02 00 34 ? D0 00 ? 21 ? ? 91"), ToArray("20 06 00 36 E1 E3 01 91 E0 03 13 AA 2F 0B")),
                 DarkPattern = ToBytes(ToArray("17 00 00 14 ? D0 00 ? 21 ? ? 91"), ToArray("20 06 00 37 E1 E3 01 91 E0 03 13 AA 2F 0B")),
             },
             new()
             {
+                // 2021.3.10(m1)、2021.3.11(m1)
+                Version = "2021.3.10 ; 2021.3.11",
+                Architecture = ArchitectureType.MacOS_ARM64,
+                LightPattern = ToBytes(ToArray("F4 02 00 34 ? ? 00 ? 21 ? ? 91"), ToArray("20 06 00 36 E1 E3 01 91 E0 03 13 AA 2F 0B")),
+                DarkPattern = ToBytes(ToArray("17 00 00 14 ? ? 00 ? 21 ? ? 91"), ToArray("20 06 00 37 E1 E3 01 91 E0 03 13 AA 2F 0B")),
+            },
+            new()
+            {
+                // 2021.3.12(m1)
+                Version = "2021.3.12",
+                Architecture = ArchitectureType.MacOS_ARM64,
+                LightPattern = ToBytes(ToArray("14 68 68 38 F4 02 00 34 ? ? 00 ? 21 ? ? 91"), ToArray("20 06 00 36 E1 E3 01 91 E0 03 13 AA 2F 0B")),
+                DarkPattern = ToBytes(ToArray("14 68 68 38 17 00 00 14 ? ? 00 ? 21 ? ? 91"), ToArray("20 06 00 37 E1 E3 01 91 E0 03 13 AA 2F 0B")),
+            },
+            new()
+            {
+                // 2021.3.19(m1)
+                Version = "2021.3",
+                Architecture = ArchitectureType.MacOS_ARM64,
+                LightPattern = ToBytes(ToArray("14 68 68 38 14 05 00 34 41 D3 00 90 21 60"), ToArray("20 06 00 36 E1 E3 01 91 E0 03 13 AA 2F 0B")),
+                DarkPattern = ToBytes(ToArray("14 68 68 38 28 00 00 14 41 D3 00 90 21 60"), ToArray("20 06 00 37 E1 E3 01 91 E0 03 13 AA 2F 0B")),
+            },
+            new()
+            {
                 // 2022.1.2(m1)
-                Version = "2022",
+                Version = "2022.1.2",
                 Architecture = ArchitectureType.MacOS_ARM64,
                 LightPattern = ToBytes(ToArray("14 05 00 34 21 CE 00 D0 21 00 37"), ToArray("20 06 00 36 E1 E3 01 91 E0 03 13")),
                 DarkPattern = ToBytes(ToArray("28 00 00 14 21 CE 00 D0 21 00 37"), ToArray("20 06 00 37 E1 E3 01 91 E0 03 13")),
+            },
+            new()
+            {
+                // 2022.1.18(m1)
+                Version = "2022.1.18",
+                Architecture = ArchitectureType.MacOS_ARM64,
+                LightPattern = ToBytes(ToArray("14 05 00 34 21 ? 00 ? 21 ? ?"), ToArray("20 06 00 36 E1 E3 01 91 E0 03 13")),
+                DarkPattern = ToBytes(ToArray("28 00 00 14 21 ? 00 ? 21 ? ?"), ToArray("20 06 00 37 E1 E3 01 91 E0 03 13")),
+            },
+            new()
+            {
+                // 2022.1.21(m1)
+                Version = "2022",
+                Architecture = ArchitectureType.MacOS_ARM64,
+                LightPattern = ToBytes(ToArray("14 68 68 38 14 05 00 34 41 ? 00 ? 21 ? ? 91"), ToArray("20 06 00 36 E1 E3 01 91 E0 03 13 AA 2F 0B")),
+                DarkPattern = ToBytes(ToArray("14 68 68 38 28 00 00 14 41 ? 00 ? 21 ? ? 91"), ToArray("20 06 00 37 E1 E3 01 91 E0 03 13 AA 2F 0B")),
             },
         };
 
@@ -417,9 +500,16 @@ namespace UniHacker
             new()
             {
                 // 2022.1.15
-                Version = "2022",
+                Version = "2022.1.15",
                 LightPattern = ToBytes(ToArray("0F 84 A7 00 00 00 48 8B 35 D8 CE 27"), ToArray("84 36 01 00 00 48 8D B4 24 A8")),
                 DarkPattern = ToBytes(ToArray("E9 A8 00 00 00 00 48 8B 35 D8 CE 27"), ToArray("85 36 01 00 00 48 8D B4 24 A8")),
+            },
+            new()
+            {
+                // 2022.1.23
+                Version = "2022",
+                LightPattern = ToBytes(ToArray("0F 84 A7 00 00 00 48 8B 35 D0 14 29 01"), ToArray("84 C0 0F 84 36 01 00 00 48 8D B4 24 A8")),
+                DarkPattern = ToBytes(ToArray("E9 A8 00 00 00 00 48 8B 35 D0 14 29 01"), ToArray("84 C0 0F 85 36 01 00 00 48 8D B4 24 A8")),
             },
         };
 
@@ -475,8 +565,13 @@ namespace UniHacker
 
         public static UnityPatchInfo? FindPatchInfo(string version, ArchitectureType architectureType)
         {
+            var match = Regex.Match(version, @"(?<version>\d+(\.\d+)?(\.\d+)?)");
+            if (!match.Success)
+                return null;
+
+            version = match.Groups["version"].Value;
             var pathInfos = GetPatchInfos(architectureType);
-            var infos = pathInfos?.FindAll(x => version.StartsWith(x.Version) && x.Architecture == architectureType);
+            var infos = pathInfos?.FindAll(x => x.Architecture == architectureType && x.IsApproximateVersion(version));
             return infos?.OrderByDescending(x => x.Version.Length).FirstOrDefault();
         }
 
@@ -506,6 +601,37 @@ namespace UniHacker
         public bool IsValid()
         {
             return Architecture != ArchitectureType.UnKnown && DarkPattern != null && LightPattern != null;
+        }
+
+        public bool IsApproximateVersion(string version)
+        {
+            var currentVersionSplits = Version.Split(".");
+            var paramVersionSplits = version.Split(".");
+
+            var currentMajor = currentVersionSplits[0];
+            var currentMinor = currentVersionSplits.Length > 1 ? currentVersionSplits[1] : string.Empty;
+            var currentBuild = currentVersionSplits.Length > 2 ? currentVersionSplits[2] : string.Empty;
+
+            var paramMajor = paramVersionSplits[0];
+            var paramMinor = paramVersionSplits.Length > 1 ? paramVersionSplits[1] : string.Empty;
+            var paramBuild = paramVersionSplits.Length > 2 ? paramVersionSplits[2] : string.Empty;
+
+            if (currentMajor != paramMajor)
+                return false;
+
+            if (currentMinor != string.Empty && paramMinor == string.Empty)
+                return false;
+
+            if (currentMinor != string.Empty && paramMinor != string.Empty && currentMinor != paramMinor)
+                return false;
+
+            if (currentBuild != string.Empty && paramBuild == string.Empty)
+                return false;
+
+            if (currentBuild != string.Empty && paramBuild != string.Empty && currentBuild != paramBuild)
+                return false;
+
+            return true;
         }
 
         public override string ToString()
